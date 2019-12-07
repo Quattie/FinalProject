@@ -1,0 +1,30 @@
+{% extends 'Stocks/base.html'%} {% load static %} {% block content %}
+
+<h1>Random Forest Regressor on {{ request.session.ticker_str }}</h1>
+
+<h2>Number of Trees Used: {{ num_trees }}</h2>
+
+<h2>Predicted value: {{ predictions }}</h2>
+<h2>Actual value: {{ actual }}</h2>
+<div>
+  <h2>Predicted Price vs. Actual Price</h2>
+  {{ comp_plot | safe }}
+</div>
+<div class="row">
+  <div class="col-md-9">
+    <h2>Accuracy Over Number of Trees</h2>
+    {{ plot | safe }}
+  </div>
+  <div class="col-md-3">
+    <div class="importance-list">
+      <h2>Importance Factors</h2>
+      {% for i, j in importance %}
+      <p>{{ i }}: {{ j }}</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %} {% endblock %}

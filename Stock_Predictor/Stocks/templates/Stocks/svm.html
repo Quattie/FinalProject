@@ -1,0 +1,15 @@
+{% extends 'Stocks/base.html'%} {% load static %} {% block content %}
+
+<h1>SVM on {{ request.session.ticker_str }}</h1>
+
+<h2>SVM Confidence: {{ svr_confidence }}</h2>
+<h2>Linear Regression Confidence: {{ lr_confidence }}</h2>
+
+<div>
+  <h2>Results</h2>
+  {{ plot | safe }}
+</div>
+
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %} {% endblock %}

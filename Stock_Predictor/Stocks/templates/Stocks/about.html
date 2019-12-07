@@ -1,0 +1,162 @@
+{% extends 'Stocks/base.html'%} {% load static %} {% block content %}
+
+<div class="col-md-12">
+  <h2>Get to Know the Training Methods</h2>
+    <a href="/about/#section1">SVM</a> ||
+    <a href="/about/#section2">Random Forests</a> ||
+    <a href="/about/#section3">LSTM</a> ||
+    <a href="/about/#section4">Crytpo</a> 
+  </div>
+</div>
+<div class="page">
+    <div class="row">
+        <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <div class="ASVM" id="section1">
+        <br>
+        <br>
+      <h3>SVM</h3>
+      <p>
+        The objective of the support vector machine algorithm is to find a
+        hyperplane in an N-dimensional space(N — the number of features) that
+        distinctly classifies the data points. To separate the two classes of
+        data points, there are many possible hyperplanes that could be chosen.
+        Our objective is to find a plane that has the maximum margin, i.e the
+        maximum distance between data points of both classes. Maximizing the
+        margin distance provides some reinforcement so that future data points
+        can be classified with more confidence.
+      </p>
+      <br>
+      <img src="{% static "SVMOrg.png" %}"> <img src="{% static "SVMP.png" %}">
+      <br>
+      <br>
+      <p>
+        Essentially the support vector machine finds a line through all the
+        dimensions in the parameters and cuts a line through them. As seen above
+        you can increase the C or the maximum margin parameter to give a little
+        more or a little less error available in the model.
+      </p>
+      <br>
+      <img src="{% static "Hyperplane.png" %}" height=400px width =900px>
+    </div>
+    <br>
+    <div class="ARFC" id="section2">
+      <h3>Random Forests</h3>
+      <p>
+        Random forests is another machine learning method that has strengths.  Using something called a decision tree many 
+        times a method emerges that is really good with a lot of data with a lot of dimensionality.  The stock information 
+        certainly has a lot of data but doesn’t have the highest dimensionality.  Turns out you can add a lot of dimensionality 
+        to a random forest by adding columns that seem arbitrary.  Random forests can handle both classification and 
+        regression so it’s an interesting look into the difference between the two.  
+        </p>
+        <p>
+        Some of the disadvantages to random forests are that it’s somewhat of a black box whereby it’s hard to determine what 
+        is making the model effective or not.  It also does a better job with classification rather than regression.  It tends 
+        to overfit noisy data and doesn’t do particularly well in predicting beyond the training set.  But it still is informative 
+        in using a different machine learning method.
+        Below is a diagram of a basic random forest.  A decision tree is the basic building block and asks a series of questions 
+        to be able to come to an optimal outcome.  The below diagram is helpful in understanding a basic decision tree.
+        </p>
+        <br>
+        <img src="{% static "DecisionTree.jpeg" %}" height=400px width =600px>
+        <br>
+        <br>
+     <p>
+        The model above is probably wrong.  However, it will land within a range or variance of the actual answer.  This prompts 
+        an idea that by using a lot of decision trees a satisfactory answer can be found.  Because each decision tree will be somewhat 
+        close to correct you can add them all together and take the average or the optimal value within a variance to get an answer.  
+        So applying this to stocks is somewhat simple.  Adding more columns gives you more height in the tree which will yield a more 
+        accurate answer.  Columns such as day of the year, holiday or not, day of the week, season and all the time factors are really 
+        good for random forest regression.  
+      </p>
+      <br>
+      <img src="{% static "DTExtendedExample.png" %}" height=400px width=500px>
+    <br>
+    </div>
+    <br>
+    <div class="ALSTM" id="section3">
+      <h3>LSTM</h3>
+      <p>
+        With an idea of how the project is set up how does the LSTM neural network work?  Looking at the data available right away 
+        from Yahoo Finance, when the history function is used on the ticker symbol it returns a data frame of the stocks daily prices 
+        with 8 columns.  Those columns are open, high, low and close prices, volume, dividends and stock splits.  Most of the time 
+        the dividends and stock split columns will be empty as those events only happen at most once a month or once a quarter.  What 
+        is needed is the prices for the day and the volume.  Volume will help the neural net because it’s a clear indicator on price 
+        movement and fluctuation for good or bad.  Adding a new column by making some calculations to the opening and closing prices 
+        to see how much variability it had in that day was also useful.  
+        </p>
+    <p>
+        Now to divide all of our data into training and test data.  Usually a testing size of 20% of the data is enough so that 80%
+        can be used for training the data.  The way that an LSTM network works is by incrementing a moving window on the data.  To 
+        help visualize this the below diagram is instructive.
+    </p>
+    <br>
+    <img src="{% static "LSTMStructure.png" %}" height=250px width=600px>
+    <br>
+    <br>
+    <p>
+        Take the average from a certain amount of values and based on those make a prediction.  Then add that prediction to the average
+         and take the first value used off of our usable stack.  From there make a whole new prediction and rinse and repeat.  This is 
+         what long short term memory means.  It remembers all the previous predictions and cycles them back through the model to make a 
+         better prediction down the line.  Often times you can see this in the output of models because the earlier predictions aren’t as 
+         crisp as the later ones.  
+         </p>
+         <p>
+        All the data is conformed into an array that is of a certain shape.  First, take the number of rows and number of columns so 
+        the array shape will be (rows, cols).  Once the data is split and in the correct format use Sci Kit Learn’s MinMaxScaler to 
+        make the values in the array into a single value between 0 and 1.  This gives the model easy inputs to read.  One input in 
+        the array will look like diagram below.  It takes the stock price (the first array) and compresses it into a value between 0 
+        and 1 (the second array).
+    </p>
+    <br>
+    <img src="{% static "CompressedInputs.png" %}" height=150px width=800px>
+    <br>
+    <br>
+    <p>
+        The next step is to create the moving window of inputs.  Depending on the stock (large, mid or small cap) the window will 
+        increase or decrease.  For the purposes of this paper the window will be 5 days in the past.  Once this window is created 
+        create there will be an array with the shape of (row, cols, days).  Now the data is prepped to be fed into our LSTM model.
+    </p>
+        <p>
+        Many of the things to be discussed in the model are variable and need to be optimized based on what type of stock you are 
+        inputting.  The basic structure of the model is as follows.  Make a sequential model and add a LSTM layer.  The first input 
+        for the LSTM layer is the number of units which translates to the dimensionality of the output space so here put the data 
+        through this layer and it will output 100 different dimensions of data.  You can add multiple LSTM layers by adding the 
+        parameter of return sequences = true.  For the online application this already takes plenty of time to train.  Adding another
+        LSTM layer would increase processing time a lot.  The next layer adds a dropout layer which drops (in this case) half of the 
+        layers will be dropped in the neural network.  This makes the network reassess and train the model without the nodes that were 
+        dropped.  This helps with overfitting the model.  The dense layer compresses all the previous data and outputs it into the 
+        specified amount of neurons so it’s compressed into 20 neurons and then further into one so that we can get one output or the
+        future stock price that is needed.  Then input the time series data with the amount of epochs needed to train the model.  
+        Then use the validation data to see how well the model is doing so you can get a model loss history of your model.  This is 
+        important to output and show because accuracy is the only thing that matters.  See below for the model’s structure.
+        </p>
+        <br>
+        <img src="{% static "ModelStructure.png" %}" height=200px width=700px>
+        <br>
+        <br>
+    <p>
+        With the complete model, unscale the data using a flatten() function to see what the outputs were in stock price terms.  
+        Plotting the difference between the validation and the predicted values is almost the best way to accurately gauge how 
+        well the model performed.  
+      </p>
+    </div>
+    <div class="crypto" id="section4">
+      <h3>Crypto</h3>
+      <p>
+        Crypto currency was a hot topic two years ago when the values of the
+        main reached an all time high. Crypto is much different from stocks in
+        that they are much more volatile. 10% swings are not out of the ordinary
+        on a daily basis. Due to this methods that worked with stocks aren't as
+        effective on crypto currency. The LSTM neural network for example
+        sometimes latches and finds some patterns and sometimes does not. For
+        the purposes of this project only the 3 largest coins are considered,
+        being Bitcoin, Ethereum and Litecoin. Crypto markets have very different
+        regulations from the stock market is even more risky than trading
+        stocks.
+      </p>
+    </div>
+  </div>
+</div>
+  {% endblock content %}
+</div>

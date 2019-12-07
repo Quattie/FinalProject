@@ -1,0 +1,21 @@
+{% extends 'Stocks/base.html'%} {% load static %} {% block content %}
+<h1>Crypto Model for {{ crypto_name }}</h1>
+<div>
+  <h1>Tomorrow's Predicted Crypto Price</h1>
+  <h1>${{ tom_price }}</h1>
+  <div class="row">
+    <div class="col-md-12">
+      {{ prediction_chart | safe }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{ model_loss_chart | safe }}
+    </div>
+  </div>
+</div>
+</div>
+{% endblock content %}
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}

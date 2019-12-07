@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:8000/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+    #text {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      font-size: 50px;
+      color: greenyellow;
+      transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+    }
+  </style>
+  </head><body><div id="overlay">
+    <div id="text">DMing Warren Buffet</div>
+    <div class="spinner" id="training">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+      <div class="rect5"></div>
+    </div>
+  </div>
+  
+    <!-- Required meta tags -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./Stock Models_files/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="./Stock Models_files/main.css">
+    <title>Stock Models</title>
+  
+  
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="http://localhost:8000/">Stock Predictions</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="http://localhost:8000/">Home</a>
+              <a class="nav-item nav-link" href="http://localhost:8000/crypto/">Crypto</a>
+              <a class="nav-item nav-link" href="http://localhost:8000/about/">About</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-12">
+          
+
+<div class="row">
+  <div class="col">
+    <h1>Please Enter A Stock Ticker</h1>
+    <form method="POST" class="post-form" id="ticker-form">
+      <input type="hidden" name="csrfmiddlewaretoken" value="QxKIoJHzCMp6IfEZ9ToKoMhVojYolcs5hJCqqrUZoxCtsh7Cu6KMSajguXgqeaEB">
+      <p> <input type="text" name="ticker" class="tickerform" maxlength="8" required="" id="id_ticker"></p>
+      <button type="submit" class="save btn btn-default" id="ticker-button">
+        Enter
+      </button>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-9">
+    <canvas id="myChart" width="400" height="400"></canvas>
+
+    <!-- <img
+      src="https://galahad-bucket.s3.amazonaws.com/static/Stocks/charts/HistoryOfNone.png"
+      onerror="this.style.display='none'"
+    /> -->
+    <!-- <img src="&lt;HttpResponse status_code=200, &quot;image/png&quot;&gt;" /> -->
+    <!-- <img src="https://galahad-bucket.s3.amazonaws.com/static/2Years.png" /> -->
+  </div>
+  <div class="col-md-3" id="training-methods">
+    <div class="row mt-2 mb-2">
+      <div class="col">
+        <form action="http://localhost:8000/recurrent/" method="GET" id="recurrent">
+          <button type="submit" class="save btn btn-default" id="recurrent-button" onclick="trainingLoad()">
+            Train Recurrent Neural Net
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col">
+        <form action="http://localhost:8000/random-forests/" method="GET" id="recurrent">
+          <button type="submit" class="save btn btn-default" id="random-forests-button" onclick="trainingLoad()">
+            Train Random Forest
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="row mt-2 mb-2">
+      <div class="col">
+        <form action="http://localhost:8000/crypto/" method="GET" id="crypto">
+          <button type="submit" class="save btn btn-default" id="crypto-button" onclick="parent.location=&#39;crypto.html&#39;">
+            Train Crypto
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="row"></div>
+    <div id="history-div"></div>
+  </div>
+</div>  
+  <script>
+    function trainingLoad() {
+      document.getElementById("overlay").style.display = "block";
+    }
+
+    var ctx = document.getElementById("myChart").getContext("2d");
+    ctx.style.backgroundColor = "rgba(255,0,0,255)";
+    var myChart = new Chart(ctx, {
+      type: "line",
+      backgroundColor: "#F5DEB3",
+      data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [
+          {
+            label: "# of Votes",
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)"
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)"
+            ],
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
+  </script>
+</div>
+
+        </div>
+      
+    </main>
+    <script>
+      var training = [
+        "DMing Warren Buffet",
+        "Praying to Papa Bezos",
+        "Training Neural Net",
+        "You really expect this to work?",
+        "Doling Out Tendies",
+        "Reading Trump's Tweets",
+        "Stopping Brexit"
+      ];
+      var rand = training[Math.floor(Math.random() * training.length)];
+      document.getElementById("text").innerHTML = rand;
+      console.log(rand);
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="./Stock Models_files/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="./Stock Models_files/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="./Stock Models_files/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="./Stock Models_files/Chart.min.js" type="text/javascript"></script>
+  
+
+</body></html>

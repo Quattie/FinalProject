@@ -1,0 +1,22 @@
+{% extends 'Stocks/base.html'%} {% load static %} {% block content %}
+<div class="row">
+  <div class="col">
+    <h1>Please Enter A Stock Ticker</h1>
+    <form method="POST" class="post-form" id="ticker-form" action="{% url 'stock-history' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="save btn btn-default" id="ticker-button" onclick="trainingLoad()">
+        Enter
+      </button>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+<script>
+  function trainingLoad() {
+    document.getElementById("overlay").style.display = "block";
+  }
+</script>
+{% endblock %}
+
